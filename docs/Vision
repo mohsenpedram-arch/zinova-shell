@@ -1,0 +1,414 @@
+برویم. این را نیمه‌کاره انجام ندهیم. اگر قرار است `zinova-shell` ساخته شود، باید مثل خود ZEIS و Platform یک پروژه مهندسی‌شده باشد، نه یک پوشه پر از alias. بشر به اندازه کافی از فایل‌های ۳۰۰۰ خطی `.bashrc` آسیب دیده است.
+
+## Vision
+
+```text
+zinova-shell
+│
+├── bootstrap.sh
+├── install.sh
+├── uninstall.sh
+├── update.sh
+├── doctor.sh
+│
+├── aliases/
+├── prompt/
+├── functions/
+├── plugins/
+├── completion/
+├── config/
+├── themes/
+├── bin/
+├── docs/
+├── tests/
+└── examples/
+```
+
+---
+
+# Phase 0
+
+## Repository Engineering
+
+```
+README.md
+LICENSE
+CHANGELOG.md
+VERSION
+
+.gitignore
+
+bootstrap.sh
+
+install.sh
+
+update.sh
+
+uninstall.sh
+
+doctor.sh
+```
+
+---
+
+# Phase 1
+
+## Shell Core
+
+```
+config/
+
+shell.conf
+
+environment.conf
+
+colors.conf
+
+icons.conf
+
+paths.conf
+```
+
+تمام تنظیمات فقط اینجا باشند.
+
+---
+
+# Phase 2
+
+## Prompt Engine
+
+```
+prompt/
+
+main.sh
+
+git.sh
+
+colors.sh
+
+icons.sh
+
+workspace.sh
+
+time.sh
+
+battery.sh
+
+python.sh
+
+docker.sh
+```
+
+---
+
+# Phase 3
+
+## Alias Engine
+
+```
+aliases/
+
+git.sh
+
+navigation.sh
+
+filesystem.sh
+
+python.sh
+
+cargo.sh
+
+docker.sh
+
+linux.sh
+
+network.sh
+
+zeis.sh
+
+platform.sh
+
+core.sh
+```
+
+---
+
+# Phase 4
+
+## Function Library
+
+```
+functions/
+
+backup.sh
+
+extract.sh
+
+search.sh
+
+workspace.sh
+
+git.sh
+
+docker.sh
+
+cargo.sh
+
+python.sh
+
+tree.sh
+
+repo.sh
+```
+
+توابع باید از Aliasها قوی‌تر باشند.
+
+مثلاً
+
+```
+zb
+```
+
+Backup
+
+```
+zd
+```
+
+Doctor
+
+```
+zw
+```
+
+Workspace
+
+---
+
+# Phase 5
+
+## Plugin System
+
+```
+plugins/
+
+git/
+
+docker/
+
+python/
+
+cargo/
+
+rust/
+
+node/
+
+oracle/
+
+postgres/
+
+mqtt/
+
+ocpp/
+
+zeis/
+```
+
+هر Plugin مستقل.
+
+---
+
+# Phase 6
+
+## Workspace Detector
+
+تشخیص خودکار
+
+```
+ZINOVA-CORE
+
+ZINOVA-PLATFORM
+
+ZEIS
+
+QA
+
+SANDBOX
+```
+
+بدون اینکه کاربر چیزی بنویسد.
+
+---
+
+# Phase 7
+
+## Prompt Context
+
+مثلاً
+
+```
+⚡ ZINOVA
+```
+
+بعد
+
+```
+[CORE]
+```
+
+بعد
+
+```
+(main✓)
+```
+
+بعد
+
+```
+Python 3.14
+```
+
+بعد
+
+```
+Rust Stable
+```
+
+بعد
+
+```
+Docker ●
+```
+
+بعد
+
+```
+WSL2
+```
+
+بعد
+
+```
+⌚ 13:48
+```
+
+بعد
+
+```
+~/ZINOVA-CORE/ZEIS
+```
+
+---
+
+# Phase 8
+
+## Doctor
+
+یک دستور
+
+```
+zdoctor
+```
+
+همه چیز را بررسی کند.
+
+```
+✓ Git
+
+✓ Python
+
+✓ Cargo
+
+✓ Docker
+
+✓ SSH
+
+✓ VSCode
+
+✓ GitHub CLI
+
+✓ tree
+
+✓ micro
+
+✓ rg
+
+✓ jq
+
+✓ fd
+
+✓ bat
+
+✓ fzf
+
+✓ ripgrep
+
+✓ aliases
+
+✓ prompt
+
+✓ repositories
+```
+
+---
+
+# Phase 9
+
+## Backup
+
+```
+zbackup
+```
+
+خودش
+
+* Core
+* Platform
+* ZEIS
+
+را Backup کند.
+
+---
+
+# Phase 10
+
+## Installer
+
+فقط
+
+```
+./install.sh
+```
+
+کاربر هیچ چیز دیگری لازم نباشد.
+
+---
+
+## استاندارد پروژه
+
+از اینجا به بعد، مثل سایر پروژه‌های ZINOVA برای `zinova-shell` هم اسناد رسمی خواهیم داشت:
+
+```
+docs/
+
+architecture/
+
+adr/
+
+standards/
+
+developer-guide/
+
+installation/
+
+prompt/
+
+aliases/
+
+plugins/
+
+functions/
+```
+
+و از همان روز اول، نسخه‌بندی و ADR خواهیم داشت. نتیجه این می‌شود که اگر دو سال دیگر روی یک لپ‌تاپ جدید یا یک سرور جدید بروی، با یک دستور محیط توسعه‌ای دقیقاً مشابه امروز بالا می‌آید، نه اینکه دوباره شکارچی aliasهای گمشده شوی.
