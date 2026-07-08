@@ -1,0 +1,319 @@
+به نظرم این ایده، یکی از بهترین کارهایی است که برای اکوسیستم ZINOVA می‌توانیم انجام بدهیم. نه به خاطر aliasها، بلکه چون **محیط توسعه هم باید مثل خود پروژه مهندسی شود**.
+
+بعد از مقدمه، من فصل‌ها را این‌طور ادامه می‌دهم:
+
+---
+
+# 1. فلسفه zinova-shell
+
+`zinova-shell` فقط مجموعه‌ای از Aliasها نیست.
+
+هدف آن این است که هر توسعه‌دهنده، روی هر ماشین، بعد از نصب Ubuntu یا WSL، در کمتر از پنج دقیقه دقیقاً همان محیط کاری استاندارد ZINOVA را داشته باشد.
+
+اصل طراحی:
+
+* Reproducible
+* Version Controlled
+* Portable
+* Zero Manual Configuration
+
+---
+
+# 2. چرا نباید ~/.bashrc را مستقیم ویرایش کنیم؟
+
+تقریباً تمام دردسرهایی که دیشب داشتیم از همین‌جا شروع شد.
+
+وقتی ده‌ها Alias، Prompt، Function و Script داخل `.bashrc` نوشته می‌شوند:
+
+* پیدا کردن خطا سخت می‌شود.
+* با نصب ابزارهای جدید فایل تغییر می‌کند.
+* Merge کردن تقریباً غیرممکن می‌شود.
+* نسخه‌بندی معنی ندارد.
+* Backup گرفتن بی‌فایده می‌شود.
+
+`.bashrc` باید تا حد ممکن کوچک بماند.
+
+مثلاً:
+
+```bash
+source ~/zinova-shell/bootstrap.sh
+```
+
+تمام.
+
+---
+
+# 3. معماری zinova-shell
+
+```
+zinova-shell/
+
+bootstrap.sh
+
+aliases/
+    git.sh
+    navigation.sh
+    docker.sh
+    cargo.sh
+    python.sh
+    zeis.sh
+    platform.sh
+    linux.sh
+
+prompt/
+    prompt.sh
+    git.sh
+    colors.sh
+
+functions/
+    backup.sh
+    search.sh
+    workspace.sh
+
+completion/
+
+themes/
+
+config/
+    shell.conf
+
+install.sh
+
+uninstall.sh
+
+README.md
+```
+
+---
+
+# 4. Bootstrap
+
+تنها فایل که داخل `.bashrc` قرار می‌گیرد:
+
+```bash
+if [ -f "$HOME/zinova-shell/bootstrap.sh" ]; then
+    source "$HOME/zinova-shell/bootstrap.sh"
+fi
+```
+
+هیچ چیز دیگری.
+
+---
+
+# 5. Bootstrap چه می‌کند؟
+
+به ترتیب:
+
+```
+bootstrap.sh
+
+↓
+
+Load Config
+
+↓
+
+Load Colors
+
+↓
+
+Load Prompt
+
+↓
+
+Load Aliases
+
+↓
+
+Load Functions
+
+↓
+
+Load Completion
+
+↓
+
+Environment Validation
+
+↓
+
+Ready
+```
+
+اگر یکی خراب شود، بقیه همچنان اجرا می‌شوند.
+
+---
+
+# 6. Prompt Engine
+
+Prompt نباید داخل `.bashrc` باشد.
+
+```
+prompt/
+
+prompt.sh
+
+git.sh
+
+icons.sh
+
+colors.sh
+
+battery.sh
+
+python.sh
+```
+
+خود Prompt فقط این‌ها را صدا می‌زند.
+
+---
+
+# 7. Alias Engine
+
+به جای یک فایل ۱۰۰۰ خطی:
+
+```
+aliases/
+
+git.sh
+
+cargo.sh
+
+python.sh
+
+docker.sh
+
+navigation.sh
+
+linux.sh
+
+zeis.sh
+
+platform.sh
+```
+
+هر فایل مسئول یک موضوع است.
+
+---
+
+# 8. Environment Detection
+
+خود Shell تشخیص می‌دهد:
+
+```
+Ubuntu
+
+WSL
+
+Docker
+
+Root
+
+Normal User
+
+SSH
+
+VS Code
+
+Termux
+```
+
+و رفتار مناسب را انتخاب می‌کند.
+
+---
+
+# 9. Workspace Detection
+
+Prompt خودش تشخیص می‌دهد اکنون داخل کدام Repository هستی.
+
+مثلاً:
+
+```
+⚡ ZINOVA [CORE]
+```
+
+یا
+
+```
+⚡ ZINOVA [PLATFORM]
+```
+
+یا
+
+```
+⚡ ZINOVA [ZEIS]
+```
+
+بدون اینکه Alias خاصی اجرا شود.
+
+---
+
+# 10. Plugin Architecture
+
+بعداً می‌توان اضافه کرد:
+
+```
+plugins/
+
+rust
+
+python
+
+docker
+
+kubernetes
+
+node
+
+git
+
+oracle
+
+postgres
+
+mqtt
+
+ocpp
+
+zeis
+```
+
+هر Plugin مستقل است.
+
+---
+
+# 11. نصب
+
+تنها دستور نصب:
+
+```bash
+curl ...
+
+یا
+
+git clone ...
+
+./install.sh
+```
+
+---
+
+# 12. حذف
+
+```bash
+./uninstall.sh
+```
+
+تمام تغییرات را برمی‌گرداند.
+
+---
+
+## یک پیشنهاد برای آینده
+
+من این پروژه را دیگر به عنوان یک فایل تنظیمات معمولی نمی‌بینم. اگر قرار است روی GitHub منتشر شود، بهتر است آن را به یک پروژه مستقل تبدیل کنیم:
+
+```
+zinova-shell
+```
+
+که نقش **Developer Workstation Engineering** را برای کل اکوسیستم ZINOVA داشته باشد. یعنی هر کسی که روی Core، Platform یا ZEIS کار می‌کند، فقط این مخزن را نصب کند و یک محیط توسعه استاندارد، نسخه‌بندی‌شده و قابل تکرار تحویل بگیرد. این دقیقاً همان چیزی است که دیشب جای خالی‌اش را حس کردی؛ یک تغییر کوچک در محیط نباید باعث شود Aliasها و Prompt مثل گربه‌ای که صدایش می‌زنی و تصمیم می‌گیرد پاسخ ندهد، ناپدید شوند.
