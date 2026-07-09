@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+source ~/zinova-shell/shell/theme.sh
+source ~/zinova-shell/shell/context.sh
+source ~/zinova-shell/shell/environment.sh
+source ~/zinova-shell/shell/git.sh
 
 zinova_prompt() {
 
-    local repo
-    repo=$(zinova_context)
-
-    local env
-    env=$(zinova_environment)
-
-    local now
-    now=$(date "+%Y-%m-%d %H:%M:%S")
+    local repo=$(zinova_context)
+    local env=$(zinova_environment)
+    local now=$(date "+%Y-%m-%d %H:%M:%S")
 
     local repo_color="$CLR_LOCAL"
 
@@ -22,12 +22,13 @@ zinova_prompt() {
         LOCAL)     repo_color="$CLR_LOCAL" ;;
     esac
 
-    local git_info=""
+   local git_info
+    git_info=$(zinova_git_prompt)
 
     if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 
         local branch
-        branch=$(git branch --show-current 2>/dev/null)
+        branch=$(git branch --show-current)
 
         if git diff --quiet && git diff --cached --quiet; then
             git_info="${CLR_GIT_OK}🟢 ${branch} ✓${CLR_RESET}"
@@ -40,8 +41,9 @@ zinova_prompt() {
     PS1="${CLR_TITLE}⚡ZINOVA ${repo_color}[${repo}|${env}] ${repo_color}⌚${now} ${USER} in ${PWD}${CLR_RESET}"
 
     if [ -n "$git_info" ]; then
-        PS1="${PS1}\n${git_info}\n\\$ "
+        PS1="${PS1}\n${git_info}\n\$ "
     else
-        PS1="${PS1}\n\\$ "
+        PS1="${PS1}\n\$ "
     fi
+
 }
