@@ -1,0 +1,126 @@
+عالی. حالا می‌رسیم به قسمت مهم. اگر این را درست انجام بدهیم، دیگر هیچ‌وقت مجبور نیستی وسط شب دنبال این بگردی که «پرامپت از کجا آمد؟»، «الیاس‌ها چرا رفتند؟» یا «bashrc را کی خراب کرد؟». انسان‌ها علاقه عجیبی به نگهداری تنظیمات حیاتی داخل یک فایل دارند و بعد هم همان فایل را ده بار دستکاری می‌کنند. ما این کار را نمی‌کنیم.
+
+## مرحله ۴: ساخت فایل اصلی shell
+
+برو داخل ریپوی `zinova-shell`:
+
+```bash
+cd ~/zinova-shell
+```
+
+ساختار زیر را بساز:
+
+```text
+zinova-shell/
+├── install.sh
+├── uninstall.sh
+├── shell/
+│   ├── aliases.sh
+│   ├── prompt.sh
+│   ├── exports.sh
+│   ├── functions.sh
+│   └── completion.sh
+├── config/
+├── README.md
+└── LICENSE
+```
+
+---
+
+### ایجاد پوشه
+
+```bash
+mkdir -p shell config
+```
+
+---
+
+### فایل‌ها
+
+```bash
+touch install.sh
+touch uninstall.sh
+
+touch shell/aliases.sh
+touch shell/prompt.sh
+touch shell/exports.sh
+touch shell/functions.sh
+touch shell/completion.sh
+```
+
+الان
+
+```bash
+tree
+```
+
+باید تقریباً این را نشان بدهد:
+
+```text
+.
+├── config
+├── install.sh
+├── LICENSE
+├── README.md
+├── shell
+│   ├── aliases.sh
+│   ├── completion.sh
+│   ├── exports.sh
+│   ├── functions.sh
+│   └── prompt.sh
+└── uninstall.sh
+```
+
+---
+
+## install.sh
+
+این فایل فقط یک بار اجرا می‌شود و همه چیز را وصل می‌کند.
+
+بعداً داخلش چیزی شبیه این خواهیم داشت:
+
+```bash
+#!/usr/bin/env bash
+
+mkdir -p ~/.config/zinova
+
+cp shell/*.sh ~/.config/zinova/
+
+grep -q "zinova-shell" ~/.bashrc || cat <<EOF >> ~/.bashrc
+
+# zinova-shell
+source ~/.config/zinova/exports.sh
+source ~/.config/zinova/aliases.sh
+source ~/.config/zinova/functions.sh
+source ~/.config/zinova/prompt.sh
+EOF
+
+echo "ZINOVA Shell installed."
+```
+
+---
+
+نتیجه؟
+
+از این به بعد:
+
+* هیچ alias داخل `.bashrc` نیست.
+* هیچ prompt داخل `.bashrc` نیست.
+* هیچ export داخل `.bashrc` نیست.
+* فقط چهار خط `source` وجود دارد.
+
+اگر خواستی prompt را عوض کنی، فقط `prompt.sh` را ویرایش می‌کنی.
+
+اگر alias جدید خواستی، فقط `aliases.sh`.
+
+اگر تابع جدید خواستی، فقط `functions.sh`.
+
+اگر خواستی روی پنج سیستم نصب کنی:
+
+```bash
+git clone ...
+cd zinova-shell
+./install.sh
+```
+
+همه چیز در کمتر از ۱۰ ثانیه آماده است. این همان چیزی است که یک محیط توسعه مهندسی‌شده باید باشد، نه مجموعه‌ای از طلسم‌های پراکنده در `.bashrc` که بعد از دو ماه حتی نویسنده‌اش هم نمی‌داند از کجا آمده‌اند.

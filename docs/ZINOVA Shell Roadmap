@@ -1,0 +1,267 @@
+پس از این لحظه، `zinova-shell` را مثل یک پروژه Enterprise جلو می‌بریم، نه یک مخزن Alias.
+
+پیشنهاد من این است که از همان ابتدا Roadmap رسمی داشته باشد.
+
+---
+
+# ZINOVA Shell Roadmap
+
+```text
+v0.1.0   Repository Bootstrap
+v0.2.0   Installation Framework
+v0.3.0   Prompt Engine
+v0.4.0   Alias Engine
+v0.5.0   Function Library
+v0.6.0   Workspace Detection
+v0.7.0   Plugin Manager
+v0.8.0   Environment Doctor
+v0.9.0   Backup Manager
+v1.0.0   Stable Release
+```
+
+---
+
+# Repository Principle
+
+هیچ فایل تنظیماتی نباید مستقیماً تغییر کند.
+
+مثلاً
+
+```text
+~/.bashrc
+```
+
+فقط این را داشته باشد:
+
+```bash
+source ~/zinova-shell/bootstrap.sh
+```
+
+تمام.
+
+---
+
+# بزرگ‌ترین تفاوت با Shellهای معمولی
+
+این Shell فقط Alias اجرا نمی‌کند.
+
+بلکه وضعیت کل Workspace را می‌فهمد.
+
+مثلاً اگر داخل این باشی
+
+```text
+~/ZINOVA-CORE
+```
+
+Prompt:
+
+```text
+⚡ ZINOVA [CORE]
+```
+
+اگر بروی
+
+```text
+~/ZINOVA-CORE/ZEIS
+```
+
+می‌شود
+
+```text
+⚡ ZINOVA [ZEIS]
+```
+
+اگر بروی
+
+```text
+~/ZINOVA-CORE/zinova-platform
+```
+
+می‌شود
+
+```text
+⚡ ZINOVA [PLATFORM]
+```
+
+اگر داخل Git نباشی
+
+```text
+⚡ WORKSPACE
+```
+
+---
+
+# چیزی که کمتر کسی انجام می‌دهد
+
+من یک **Context Engine** هم اضافه می‌کنم.
+
+مثلاً Prompt فقط Repository را نشان ندهد.
+
+بلکه این‌ها را هم بفهمد:
+
+```text
+OS
+
+Ubuntu
+
+WSL
+
+Docker
+
+Python Version
+
+Rust Version
+
+Git Branch
+
+Dirty Repository
+
+Battery
+
+SSH
+
+VPN
+
+Virtual Environment
+
+Current Workspace
+
+Execution Mode
+```
+
+---
+
+# Doctor Engine
+
+فقط با
+
+```bash
+zdoctor
+```
+
+گزارش بگیری:
+
+```text
+──────────────────────────
+
+Environment
+
+──────────────────────────
+
+✓ Ubuntu
+
+✓ WSL2
+
+✓ Bash 5.2
+
+✓ Git
+
+✓ GitHub CLI
+
+✓ Python
+
+✓ Cargo
+
+✓ Rust
+
+✓ Docker
+
+✓ Tree
+
+✓ Micro
+
+✓ jq
+
+✓ rg
+
+✓ fd
+
+✓ bat
+
+✓ fzf
+
+✓ ZINOVA CORE
+
+✓ PLATFORM
+
+✓ ZEIS
+
+✓ Prompt
+
+✓ Aliases
+
+✓ Functions
+
+✓ Plugins
+
+Status : HEALTHY
+```
+
+---
+
+# Backup Engine
+
+مثلاً
+
+```bash
+zbackup
+```
+
+خودش:
+
+* Commit بررسی کند.
+* Git Status را ذخیره کند.
+* سه Repository را Archive کند.
+* Checksum بسازد.
+* Manifest تولید کند.
+* نسخه را Timestamp بزند.
+* مقصد را از Config بخواند.
+
+یعنی دیگر لازم نباشد هر بار `tar` طولانی بنویسی.
+
+---
+
+# Workspace Engine
+
+مثلاً
+
+```bash
+zws
+```
+
+خروجی:
+
+```text
+Workspace : ZEIS
+
+Repository : Clean
+
+Branch : main
+
+Python : 3.14
+
+Rust : Stable
+
+Docker : Running
+
+GitHub : Connected
+
+Last Commit : 2e0fc4c
+
+Environment : WSL2
+```
+
+---
+
+## و یک پیشنهاد مهم
+
+به نظرم این پروژه فقط برای استفاده داخلی نباشد. برایش همان استانداردی را تعریف کنیم که برای Core و ZEIS تعریف کرده‌ای:
+
+* ADRها
+* استانداردهای ZS-001 تا ZS-010
+* مستندات معماری
+* تست‌ها
+* نسخه‌بندی
+* CI برای بررسی صحت اسکریپت‌های Bash (`shellcheck`)
+
+اگر این کار را بکنیم، `zinova-shell` از یک مجموعه Alias به یک **Developer Workstation Platform** تبدیل می‌شود؛ یعنی زیرساخت رسمی توسعه کل اکوسیستم ZINOVA. این سرمایه‌گذاری یک‌بار انجام می‌شود، اما هر بار که یک ماشین جدید یا یک توسعه‌دهنده جدید وارد پروژه شود، سودش را پس می‌دهد.

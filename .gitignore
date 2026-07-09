@@ -5,3 +5,44 @@
 Thumbs.db
 
 config/user.conf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Build
+build/
+dist/
+.eggs/
+*.egg-info/
+*.egg
+
+# Virtual Environments
+.env
+.venv
+venv/
+env/
+ENV/
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage*
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Misc
+.python-version
+.pdm-python
+.streamlit/secrets.toml
