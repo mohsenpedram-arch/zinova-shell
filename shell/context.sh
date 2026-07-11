@@ -15,11 +15,23 @@ case "$dir" in
 ;;
 
 */ZINOVA-CORE/zinova-core*)
-    echo "ENGINE"
+    echo "CORE"
+;;
+
+*/ZINOVA-CORE/ZINOVA-CORE*)
+    echo "CORE"
 ;;
 
 */ZINOVA-CORE)
     echo "WORKSPACE"
+;;
+
+*/ZINOVA-CORE/zinova-shell*)
+    echo "SHELL"
+;;
+
+*/ARZIN-CORE*)
+    echo "ARZIN"
 ;;
 
 */ZINOVA-CORE-QA*)
@@ -44,41 +56,6 @@ case "$dir" in
 
 *)
     echo "LOCAL"
-;;
-
-esac
-
-}
-
-#-------------
-zinova_context_color() {
-
-local repo=$(zinova_context)
-
-case "$repo" in
-
-WORKSPACE)
-    REPO_COLOR="$CLR_WORKSPACE"
-;;
-
-ENGINE)
-    REPO_COLOR="$CLR_ENGINE"
-;;
-
-PLATFORM)
-    REPO_COLOR="$CLR_PLATFORM"
-;;
-
-ZEIS)
-    REPO_COLOR="$CLR_ZEIS"
-;;
-
-LOCAL)
-    REPO_COLOR="$CLR_LOCAL"
-;;
-
-*)
-    REPO_COLOR="$CLR_LOCAL"
 ;;
 
 esac

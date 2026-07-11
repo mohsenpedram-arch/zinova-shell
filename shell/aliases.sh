@@ -7,7 +7,7 @@
 alias zc='cd ~/ZINOVA-CORE'
 
 # Main Repositories
-alias cor='cd ~/ZINOVA-CORE/zinova-core'
+alias cor='cd ~/ZINOVA-CORE/ZINOVA-CORE'
 alias plat='cd ~/ZINOVA-CORE/zinova-platform'
 alias zis='cd ~/ZINOVA-CORE/ZEIS'
 
@@ -64,3 +64,5 @@ alias cr='cargo run'
 # =========================
 
 alias uu='sudo apt update && sudo apt upgrade -y'
+alias zn='cd ~/ARZIN-CORE/ARZIN-CORE'
+alias shel='cd ~/ZINOVA-CORE/zinova-shell'
