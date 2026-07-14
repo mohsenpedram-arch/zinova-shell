@@ -14,13 +14,37 @@ zinova_prompt() {
     local repo_color="$CLR_LOCAL"
 
     case "$repo" in
-        WORKSPACE) repo_color="$CLR_WORKSPACE" ;;
-        ENGINE)    repo_color="$CLR_ENGINE" ;;
-        PLATFORM)  repo_color="$CLR_PLATFORM" ;;
-        ZEIS)      repo_color="$CLR_ZEIS" ;;
-        CORE)      repo_color="$CLR_WORKSPACE" ;;
-        LOCAL)     repo_color="$CLR_LOCAL" ;;
+
+        WORKSPACE)
+            repo_color="$CLR_WORKSPACE"
+        ;;
+
+        ENGINE)
+            repo_color="$CLR_ENGINE"
+        ;;
+
+        PLATFORM)
+            repo_color="$CLR_PLATFORM"
+        ;;
+
+        ZEIS)
+            repo_color="$CLR_ZEIS"
+        ;;
+
+        ARZIN)
+            repo_color="$CLR_ARZIN"
+        ;;
+
+        CORE)
+            repo_color="$CLR_WORKSPACE"
+        ;;
+
+        LOCAL)
+            repo_color="$CLR_LOCAL"
+        ;;
+
     esac
+
 
     local git_info=""
 
@@ -37,11 +61,14 @@ zinova_prompt() {
 
     fi
 
+
     PS1="${CLR_TITLE}⚡ZINOVA ${repo_color}[${repo}|${env}] ${repo_color}⌚${now} ${USER} in ${PWD}${CLR_RESET}"
+
 
     if [ -n "$git_info" ]; then
         PS1="${PS1}\n${git_info}\n\\$ "
     else
         PS1="${PS1}\n\\$ "
     fi
+
 }
