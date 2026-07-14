@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source "$(dirname "${BASH_SOURCE[0]}")/theme.sh"
+
+
 zinova_prompt() {
 
     local repo
@@ -11,40 +14,82 @@ zinova_prompt() {
     local now
     now=$(date "+%Y-%m-%d %H:%M:%S")
 
-    local repo_color="$CLR_LOCAL"
+
+    # ==========================================================
+    # Brand Identity
+    # ==========================================================
+
+    local brand
+    local brand_icon
+    local brand_color
+    local repo_color
+
 
     case "$repo" in
 
-        WORKSPACE)
-            repo_color="$CLR_WORKSPACE"
-        ;;
-
-        ENGINE)
-            repo_color="$CLR_ENGINE"
-        ;;
-
-        PLATFORM)
-            repo_color="$CLR_PLATFORM"
-        ;;
+        ARZIN)
+            brand="ARZIN"
+            brand_icon="$ICON_ARZIN"
+            brand_color="$CLR_ARZIN"
+            repo_color="$CLR_ARZIN"
+            ;;
 
         ZEIS)
+            brand="ZEIS"
+            brand_icon="$ICON_ZEIS"
+            brand_color="$CLR_ZEIS"
             repo_color="$CLR_ZEIS"
-        ;;
+            ;;
 
-        ARZIN)
-            repo_color="$CLR_ARZIN"
-        ;;
+        SHELL)
+            brand="SHELL"
+            brand_icon="$ICON_SHELL"
+            brand_color="$CLR_SHELL"
+            repo_color="$CLR_SHELL"
+            ;;
+
+        PLATFORM)
+            brand="ZINOVA"
+            brand_icon="$ICON_ZINOVA"
+            brand_color="$CLR_ZINOVA"
+            repo_color="$CLR_PLATFORM"
+            ;;
+
+        ENGINE)
+            brand="ZINOVA"
+            brand_icon="$ICON_ZINOVA"
+            brand_color="$CLR_ZINOVA"
+            repo_color="$CLR_CORE"
+            ;;
 
         CORE)
-            repo_color="$CLR_WORKSPACE"
-        ;;
+            brand="ZINOVA"
+            brand_icon="$ICON_ZINOVA"
+            brand_color="$CLR_ZINOVA"
+            repo_color="$CLR_CORE"
+            ;;
 
-        LOCAL)
+        WORKSPACE)
+            brand="ZINOVA"
+            brand_icon="$ICON_ZINOVA"
+            brand_color="$CLR_ZINOVA"
             repo_color="$CLR_LOCAL"
-        ;;
+            ;;
+
+        *)
+            brand="ZINOVA"
+            brand_icon="$ICON_ZINOVA"
+            brand_color="$CLR_ZINOVA"
+            repo_color="$CLR_LOCAL"
+            ;;
 
     esac
 
+
+
+    # ==========================================================
+    # Git Status
+    # ==========================================================
 
     local git_info=""
 
@@ -53,22 +98,39 @@ zinova_prompt() {
         local branch
         branch=$(git branch --show-current 2>/dev/null)
 
+
         if git diff --quiet && git diff --cached --quiet; then
-            git_info="${CLR_GIT_OK}🟢 ${branch} ✓${CLR_RESET}"
+
+            git_info="${CLR_GIT_OK}${ICON_OK} ${branch} ✓${CLR_RESET}"
+
         else
-            git_info="${CLR_GIT_BAD}🔴 ${branch} ✗${CLR_RESET}"
+
+            git_info="${CLR_GIT_BAD}${ICON_BAD} ${branch} ✗${CLR_RESET}"
+
         fi
 
     fi
 
 
-    PS1="${CLR_TITLE}⚡ZINOVA ${repo_color}[${repo}|${env}] ${repo_color}⌚${now} ${USER} in ${PWD}${CLR_RESET}"
+
+    # ==========================================================
+    # Prompt Render
+    # ==========================================================
+
+    PS1="${brand_color}${brand_icon}${brand}${CLR_RESET} ${repo_color}[${repo}${CLR_RESET}|${CLR_DEV}${env}${CLR_RESET}] ${CLR_TIME}⌚${now}${CLR_RESET} ${CLR_USER}${USER}${CLR_RESET} in ${CLR_PATH}${PWD}${CLR_RESET}"
 
 
     if [ -n "$git_info" ]; then
+
         PS1="${PS1}\n${git_info}\n\\$ "
+
     else
+
         PS1="${PS1}\n\\$ "
+
     fi
 
 }
+
+
+PROMPT_COMMAND=zinova_prompt

@@ -22,7 +22,7 @@ alias ws='cd "$ZINOVA_WORKSPACES"'
 alias zroot='cd "$ZINOVA_ROOT"'
 
 
-alias cor='cd "$ZINOVA_ENGINE"'
+alias cor='cd "$ZINOVA_CORE"'
 
 alias plat='cd "$ZINOVA_PLATFORM"'
 

@@ -1,43 +1,44 @@
-#!/usr/bin/env bash
+zinova_context ()
+{
+    local dir="$PWD"
 
+    case "$dir" in
 
-zinova_context() {
+        */WORKSPACES/SHARED/ZEIS*)
+            echo "ZEIS"
+        ;;
 
-local dir="$PWD"
+        */WORKSPACES/SHARED/zinova-shell*)
+            echo "SHELL"
+        ;;
 
+        */WORKSPACES/ZINOVA/zinova-platform*)
+            echo "PLATFORM"
+        ;;
 
-case "$dir" in
+        */WORKSPACES/ZINOVA/ZINOVA-CORE*)
+            echo "CORE"
+        ;;
 
+        */WORKSPACES/ZINOVA/ZINOVA-PLATFORM-SANDBOX*)
+            echo "PLATFORM"
+        ;;
 
-*/WORKSPACES/SHARED/ZEIS*)
-    echo "ZEIS"
-;;
+        */WORKSPACES/ZINOVA/ZINOVA-CORE-SANDBOX*)
+            echo "CORE"
+        ;;
 
+        */WORKSPACES/ARZIN*)
+            echo "ARZIN"
+        ;;
 
-*/WORKSPACES/ZINOVA/zinova-platform*)
-    echo "PLATFORM"
-;;
+        */WORKSPACES*)
+            echo "LOCAL"
+        ;;
 
+        *)
+            echo "LOCAL"
+        ;;
 
-*/WORKSPACES/ZINOVA/zinova-core*)
-    echo "ENGINE"
-;;
-
-
-*/WORKSPACES/ZINOVA*)
-    echo "WORKSPACE"
-;;
-
-
-*/WORKSPACES/ARZIN*)
-    echo "ARZIN"
-;;
-
-
-*)
-    echo "LOCAL"
-;;
-
-esac
-
+    esac
 }

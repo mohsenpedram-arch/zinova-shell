@@ -21,6 +21,10 @@ case "$dir" in
     echo "DEV"
 ;;
 
+*/ZINOVA-CORE*)
+    echo "DEV"
+ ;;
+
 *)
     echo "DEV"
 ;;
