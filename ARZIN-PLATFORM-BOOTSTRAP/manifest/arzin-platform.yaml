@@ -1,0 +1,91 @@
+platform:
+  name: "ARZIN"
+  version: "1.0.0"
+  release: "Iron-Tehran"
+  description: "Edge Intelligence Platform - Bootstrap Factory"
+
+os:
+  primary:
+    id: ubuntu
+    version: "24.04"
+    codename: "noble"
+  compatibility_matrix:
+    - id: ubuntu
+      version: "22.04"
+      codename: "jammy"
+    - id: debian
+      version: "12"
+      codename: "bookworm"
+
+profiles:
+  developer:
+    description: "محیط توسعه محلی"
+    enable_kubernetes_tools: false
+    enable_production_hardening: false
+  integration:
+    description: "محیط یکپارچه‌سازی"
+    enable_kubernetes_tools: true
+    enable_production_hardening: false
+  production:
+    description: "محیط عملیاتی"
+    enable_kubernetes_tools: true
+    enable_production_hardening: true
+
+toolchain:
+  base_packages:
+    - curl wget git vim nano micro tree tmux screen htop jq yq ripgrep fd-find
+    - net-tools iproute2 dnsutils lsof strace tcpdump telnet nc unzip zip tar gzip xz-utils
+    - build-essential make cmake pkg-config software-properties-common ca-certificates gnupg lsb-release bash-completion
+  languages:
+    java:
+      version: "21"
+    kotlin:
+      version: "2.0.0"
+    python:
+      version: "3.12"
+    rust:
+      version: "stable"
+  container:
+    docker:
+      version: "26.0.0"
+    kubernetes:
+      kubectl_version: "1.30"
+      helm_version: "3.15"
+
+infrastructure:
+  services:
+    postgresql:
+      image: "postgres:16-alpine"
+      port: "5432"
+    redis:
+      image: "redis:7-alpine"
+      port: "6379"
+    kafka:
+      image: "confluentinc/cp-kafka:3.9.1"
+      port: "9092"
+    keycloak:
+      image: "quay.io/keycloak/keycloak:26.0"
+      port: "8080"
+    vault:
+      image: "hashicorp/vault:latest"
+      port: "8200"
+
+security:
+  secrets_policy: "VAULT_FIRST"
+  git_secrets: "FORBIDDEN"
+  vault:
+    engine: "kv-v2"
+    mount_path: "secret/arzin"
+
+requirements:
+  cpu:
+    min_cores: 4
+  memory:
+    min_gb: 8
+  disk:
+    min_gb: 50
+
+governance:
+  locked_by: "CTO - SDC"
+  ratification_date: "2026-07-11"
+  review_cycle: "QUARTERLY"
