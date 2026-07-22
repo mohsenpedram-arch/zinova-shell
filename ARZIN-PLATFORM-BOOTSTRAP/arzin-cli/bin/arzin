@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ARZIN_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export ARZIN_HOME
+source "$ARZIN_HOME/core/config.sh"
+
+COMMAND=${1:-help}
+case "$COMMAND" in
+doctor)   bash "$ARZIN_HOME/commands/doctor.sh" ;;
+  status)   bash "$ARZIN_HOME/commands/status.sh" ;;
+install)  bash "$ARZIN_HOME/commands/install.sh" ;;
+  profile)  bash "$ARZIN_HOME/commands/profile.sh" "${@:2}" ;;
+  up)       bash "$ARZIN_HOME/commands/up.sh" ;;
+down)     bash "$ARZIN_HOME/commands/down.sh" ;;
+  restart)  bash "$ARZIN_HOME/commands/restart.sh" ;;
+health)   bash "$ARZIN_HOME/commands/health.sh" ;;
+  validate) bash "$ARZIN_HOME/../security/secret-validator.sh" ;;
+vault-check) bash "$ARZIN_HOME/../security/vault-check.sh" ;;
+  help)     echo "ARZIN CLI Commands:
+  doctor      - Check system readiness
+  install     - Install all runtimes
+  profile     - Load environment profile (developer|integration|production)
+  up          - Start infrastructure
+  down        - Stop infrastructure
+  restart     - Restart infrastructure
+  status      - Show running services
+  health      - Check service health
+  validate    - Check for secrets in Git
+  vault-check - Check Vault status"
+    ;;
+  *) echo "Unknown: $COMMAND"; exit 1 ;;
+esac

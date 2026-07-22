@@ -66,3 +66,17 @@ node_modules/
 *.o
 *.so
 *.a
+infrastructure/docker/.env
+
+Secrets and profiles (Phase 8)
+
+secrets//
+secrets/.env
+secrets/.key
+!secrets/.gitignore
+!secrets/README.md
+profiles/.env
+!profiles/*.template
+infrastructure/docker/.env
+.env
+*.env
