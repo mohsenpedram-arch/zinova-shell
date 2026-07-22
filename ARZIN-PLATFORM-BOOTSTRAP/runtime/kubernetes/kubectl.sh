@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "Installing kubectl"
+
+if command -v kubectl >/dev/null 2>&1; then
+    echo "[OK] kubectl exists"
+    exit 0
+fi
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kubectl
+sudo mv kubectl /usr/local/bin/
+kubectl version --client
+echo "[DONE] kubectl installed"
