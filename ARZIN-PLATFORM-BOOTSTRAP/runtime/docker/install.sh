@@ -1,55 +1,46 @@
 #!/usr/bin/env bash
-set -euo pipefail
-echo "================================="
-echo " ARZIN Docker Runtime Installer"
-echo "================================="
 
-if command -v docker >/dev/null 2>&1; then
-    echo "[INFO] Docker already installed"
-    docker --version
-    exit 0
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+echo "========== PHASE 3 DOCKER =========="
+
+if command_exists docker; then
+    echo "[ALREADY INSTALLED] Docker"
+else
+    echo "[INSTALLING] Docker"
+    apt-get install -y docker.io
 fi
 
-echo "[INFO] Removing old Docker packages"
-sudo apt remove -y \
-    docker \
-    docker-engine \
-    docker.io \
-    containerd \
-    runc \
-    2>/dev/null || true
+if command_exists systemctl; then
+    systemctl enable docker || true
+    systemctl start docker || true
+fi
 
-echo "[INFO] Installing prerequisites"
-sudo apt update
-sudo apt install -y \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+echo "[CHECK] Docker daemon"
+if docker info >/dev/null 2>&1; then
+    echo "[OK] Docker daemon running"
+else
+    echo "[WARNING] Docker installed but daemon unavailable"
+    if command_exists service; then
+        service docker start || true
+    fi
+    sleep 5
+    if docker info >/dev/null 2>&1; then
+        echo "[OK] Docker daemon started"
+    else
+        echo "[ERROR] Docker daemon still unavailable"
+        echo "Check:"
+        echo "systemctl status docker"
+        echo "service docker status"
+        exit 1
+    fi
+fi
 
-echo "[INFO] Adding Docker repository"
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/$(. /etc/os-release && echo $ID)/gpg \
-    | sudo gpg --dearmor \
-    -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
-
-echo \
-"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-https://download.docker.com/linux/$(. /etc/os-release && echo $ID) \
-$(. /etc/os-release && echo $VERSION_CODENAME) stable" \
-    | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-sudo apt update
-
-echo "[INFO] Installing Docker Engine"
-sudo apt install -y \
-    docker-ce \
-    docker-ce-cli \
-    containerd.io \
-    docker-buildx-plugin \
-    docker-compose-plugin
-
-echo "[DONE] Docker installed"
-docker --version
-docker compose version
+if docker compose version >/dev/null 2>&1; then
+    echo "[ALREADY INSTALLED] Docker Compose"
+else
+    echo "[INSTALLING] Docker Compose"
+    apt-get install -y docker-compose-plugin
+fi

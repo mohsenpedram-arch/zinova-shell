@@ -80,3 +80,15 @@ profiles/.env
 infrastructure/docker/.env
 .env
 *.env
+
+# CI/CD
+build/
+*.jar
+*.war
+*.ear
+.idea/
+*.iml
+dependency-check-report.html
+
+# Helm
+*.tgz

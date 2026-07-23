@@ -1,0 +1,91 @@
+name: arzin-observability
+
+networks:
+  arzin-observe:
+    name: arzin-observe
+
+volumes:
+  prometheus-data:
+  grafana-data:
+  loki-data:
+  tempo-data:
+
+services:
+  prometheus:
+    image: prom/prometheus:v3.0.0
+    container_name: arzin-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - arzin-observe
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: arzin-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=arzin
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ../dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - arzin-observe
+    depends_on:
+      - prometheus
+
+  loki:
+    image: grafana/loki:latest
+    container_name: arzin-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+      - ../config/loki.yml:/etc/loki/local-config.yaml
+    networks:
+      - arzin-observe
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: arzin-tempo
+    restart: unless-stopped
+    ports:
+      - "3200:3200"
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+    volumes:
+      - tempo-data:/var/tempo
+      - ../config/tempo.yml:/etc/tempo/config.yml
+    networks:
+      - arzin-observe
+    command: -config.file=/etc/tempo/config.yml
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: arzin-otel
+    restart: unless-stopped
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "55679:55679"  # zpages
+    volumes:
+      - ../config/otel.yml:/etc/otelcol/config.yaml
+    networks:
+      - arzin-observe
+    depends_on:
+      - tempo
+      - prometheus
